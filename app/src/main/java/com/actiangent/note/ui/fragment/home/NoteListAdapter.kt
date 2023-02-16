@@ -9,12 +9,13 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.actiangent.note.data.model.Note
 import com.actiangent.note.databinding.EmptyHeaderBinding
 import com.actiangent.note.databinding.ItemNoteBinding
+import com.actiangent.note.util.dp
 
 
 class HomeNoteListAdapter :
     ListAdapter<Note, HomeNoteListAdapter.NoteListViewHolder>(NoteDiffCallback()) {
 
-    inner class NoteListViewHolder(private val binding: ItemNoteBinding) :
+    class NoteListViewHolder(private val binding: ItemNoteBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Note) {
@@ -27,7 +28,7 @@ class HomeNoteListAdapter :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteListViewHolder {
         val binding = ItemNoteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return this.NoteListViewHolder(binding)
+        return NoteListViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: NoteListViewHolder, position: Int) {
@@ -49,20 +50,27 @@ class NoteDiffCallback : DiffUtil.ItemCallback<Note>() {
 class HeaderNoteListAdapter :
     RecyclerView.Adapter<HeaderNoteListAdapter.HeaderNoteListViewHolder>() {
 
-    inner class HeaderNoteListViewHolder(private val binding: EmptyHeaderBinding) :
-        RecyclerView.ViewHolder(binding.root) {}
+    class HeaderNoteListViewHolder(binding: EmptyHeaderBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        private val layoutParams = StaggeredGridLayoutManager.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, 72.dp
+        ).apply { isFullSpan = true }
+
+        companion object {
+            fun create(parent: ViewGroup): HeaderNoteListViewHolder {
+                val binding =
+                    EmptyHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                return HeaderNoteListViewHolder(binding).apply {
+                    itemView.layoutParams = layoutParams
+                }
+            }
+        }
+    }
 
     override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): HeaderNoteListAdapter.HeaderNoteListViewHolder {
-        val binding = EmptyHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        val layoutParams = StaggeredGridLayoutManager.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            128 // TODO - to dp
-        ).apply { isFullSpan = true }
-        return HeaderNoteListViewHolder(binding).apply { itemView.layoutParams = layoutParams }
-    }
+        parent: ViewGroup, viewType: Int
+    ): HeaderNoteListViewHolder = HeaderNoteListViewHolder.create(parent)
 
     override fun onBindViewHolder(holder: HeaderNoteListViewHolder, position: Int) {}
 
