@@ -18,7 +18,7 @@ fun setQueryText(editText: EditText, query: String) = editText.apply {
 }
 
 @BindingAdapter("app:clearQuery")
-fun oClickClearQuery(imageView: ImageView, viewModel: HomeViewModel) =
+fun onClickClearQuery(imageView: ImageView, viewModel: HomeViewModel) =
     imageView.setOnClickListener {
         viewModel.clearQuery()
     }
