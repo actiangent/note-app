@@ -54,7 +54,7 @@ class HeaderNoteListAdapter :
         RecyclerView.ViewHolder(binding.root) {
 
         private val layoutParams = StaggeredGridLayoutManager.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT, 72.dp
+            ViewGroup.LayoutParams.MATCH_PARENT, 64.dp
         ).apply { isFullSpan = true }
 
         companion object {
