@@ -12,14 +12,18 @@ import com.actiangent.note.databinding.ItemNoteBinding
 import com.actiangent.note.util.dp
 
 
-class HomeNoteListAdapter :
-    ListAdapter<Note, HomeNoteListAdapter.NoteListViewHolder>(NoteDiffCallback()) {
+class HomeNoteListAdapter(
+    private val onNoteClick: (Int) -> Unit
+) : ListAdapter<Note, HomeNoteListAdapter.NoteListViewHolder>(NoteDiffCallback()) {
 
-    class NoteListViewHolder(private val binding: ItemNoteBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class NoteListViewHolder(
+        private val binding: ItemNoteBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Note) {
+        fun bind(item: Note, onNoteClick: (Int) -> Unit) {
             binding.apply {
+                itemNoteContainer.setOnClickListener { onNoteClick(item.id) }
+
                 noteTitle.text = item.title
                 noteContent.text = item.contentText
             }
@@ -33,7 +37,7 @@ class HomeNoteListAdapter :
 
     override fun onBindViewHolder(holder: NoteListViewHolder, position: Int) {
         val note = getItem(position)
-        holder.bind(note)
+        holder.bind(note, onNoteClick)
     }
 }
 

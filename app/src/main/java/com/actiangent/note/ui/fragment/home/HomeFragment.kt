@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -37,8 +38,8 @@ class HomeFragment : Fragment() {
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false).apply {
             viewModel = this@HomeFragment.viewModel
+            lifecycleOwner = this@HomeFragment.viewLifecycleOwner
         }
-        _binding!!.lifecycleOwner = this.viewLifecycleOwner
         return binding.root
     }
 
@@ -59,7 +60,7 @@ class HomeFragment : Fragment() {
     private fun animateSearchBarOnScroll(isVisible: Boolean) {
         val searchBar = binding.searchBar.root
         val transition: Transition = Slide(Gravity.TOP).apply {
-            duration = 500
+            duration = 350
             addTarget(searchBar)
         }
 
@@ -68,7 +69,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupNoteListRecyclerView() {
-        homeNoteListAdapter = HomeNoteListAdapter()
+        homeNoteListAdapter = HomeNoteListAdapter { noteId -> navigateToDetailNote(noteId) }
         binding.recyclerViewNotes.apply {
             val orientation = resources.configuration.orientation
             val spanCount = if (orientation == Configuration.ORIENTATION_LANDSCAPE) 3 else 2
@@ -87,6 +88,11 @@ class HomeFragment : Fragment() {
                 }
             })
         }
+    }
+
+    private fun navigateToDetailNote(noteId: Int) {
+        val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(noteId)
+        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {
