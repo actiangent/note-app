@@ -3,11 +3,9 @@ package com.actiangent.note.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -44,7 +42,7 @@ fun NotesApp(
     ) {
         composable(Screen.Home.route) {
             HomeScreen(
-                modifier = modifier.padding(start = 8.dp, end = 8.dp),
+                modifier = modifier,
                 navigateToDetailNote = { noteId ->
                     navController.navigate(Screen.DetailNote.createDetailNoteRoute(noteId))
                 }

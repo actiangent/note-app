@@ -152,7 +152,7 @@ fun HomeScreen(
                     animationSpec = tween(durationMillis = 350)
                 ),
                 modifier = modifier
-                    .padding(top = 16.dp, start = 4.dp, end = 4.dp, bottom = 4.dp)
+                    .padding(top = 16.dp, start = 8.dp, end = 8.dp, bottom = 4.dp)
             ) {
                 SearchBar(
                     query = notesState.searchQuery,
