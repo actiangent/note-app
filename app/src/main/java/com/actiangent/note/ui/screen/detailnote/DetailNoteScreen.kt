@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.actiangent.note.R
 import com.actiangent.note.data.model.Note
-import com.actiangent.note.data.model.emptyNote
 import com.actiangent.note.ui.components.DeleteNoteConfirmationDialog
 import com.actiangent.note.ui.theme.NotesAppTheme
 
@@ -49,15 +48,11 @@ fun DetailNoteContent(
     )
 
     if (showDialog) {
-        DeleteNoteConfirmationDialog(
-            onConfirm = deleteNote,
-            onDismiss = { showDialog = false }
-        )
+        DeleteNoteConfirmationDialog(onConfirm = deleteNote, onDismiss = { showDialog = false })
     }
 
     Column(
-        modifier = modifier
-            .verticalScroll(rememberScrollState())
+        modifier = modifier.verticalScroll(rememberScrollState())
     ) {
         TopAppBar(
             title = {},
@@ -101,8 +96,7 @@ fun DetailNoteContent(
             },
             onValueChange = onTitleChange,
             textStyle = MaterialTheme.typography.subtitle1.copy(
-                fontSize = 22.sp,
-                fontWeight = FontWeight.SemiBold
+                fontSize = 22.sp, fontWeight = FontWeight.SemiBold
             ),
             colors = textFieldColors,
             modifier = modifier
@@ -119,17 +113,14 @@ fun DetailNoteContent(
             ),
             modifier = modifier
                 .padding(start = 20.dp)
-                .semantics(mergeDescendants = true) {
-                    contentDescription = "Note updated at"
-                }
+                .semantics(mergeDescendants = true) { contentDescription = "Note updated at" }
                 .testTag("updatedAt")
         )
         TextField(
             value = contentText,
             placeholder = {
                 Text(
-                    text = stringResource(id = R.string.note),
-                    fontSize = 16.sp
+                    text = stringResource(id = R.string.note), fontSize = 16.sp
                 )
             },
             onValueChange = onContentTextChange,
@@ -152,13 +143,8 @@ fun DetailNoteContent(
 fun DetailNoteScreen(
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
-    noteId: Int,
     viewModel: DetailNoteViewModel = hiltViewModel()
 ) {
-    if (noteId != emptyNote.id) {
-        viewModel.getNote(noteId)
-    }
-
     val uiState by viewModel.uiState.collectAsState()
 
     Surface(
@@ -166,50 +152,20 @@ fun DetailNoteScreen(
         color = MaterialTheme.colors.background,
         contentColor = MaterialTheme.colors.primary
     ) {
-        DetailNoteContent(
-            title = uiState.title,
+        DetailNoteContent(title = uiState.title,
             contentText = uiState.contentText,
             dateTime = uiState.dateTime,
             onTitleChange = viewModel::setNoteTitle,
             onContentTextChange = viewModel::setNoteContentText,
-            isDeleteNoteButtonShown = (noteId != emptyNote.id),
+            isDeleteNoteButtonShown = uiState.isNoteSaved,
             deleteNote = {
+                viewModel.deleteNote()
                 navigateBack()
-                if (uiState.noteId != emptyNote.id) {
-                    viewModel.deleteNote(
-                        Note(
-                            uiState.title,
-                            uiState.contentText,
-                            uiState.dateTime,
-                            uiState.noteId
-                        )
-                    )
-                }
             },
             navigateBack = {
+                viewModel.saveNote()
                 navigateBack()
-                if (uiState.noteId == emptyNote.id
-                    && !(uiState.title.isBlank() && uiState.contentText.isBlank())
-                ) {
-                    viewModel.createNewNote(
-                        emptyNote.copy(
-                            title = uiState.title,
-                            contentText = uiState.contentText,
-                            dateTime = uiState.dateTime
-                        )
-                    )
-                } else {
-                    viewModel.updateNote(
-                        Note(
-                            uiState.title,
-                            uiState.contentText,
-                            uiState.dateTime,
-                            uiState.noteId
-                        )
-                    )
-                }
-            }
-        )
+            })
     }
 }
 
@@ -217,26 +173,20 @@ fun DetailNoteScreen(
 @Composable
 fun DetailNoteScreenPreview() {
     val fakeNote = Note(
-        id = 3,
-        title = "Doug Dimmadome",
-        contentText =
-        """
+        id = 3, title = "Doug Dimmadome", contentText = """
             My name is Dummsdaledimmadaledimmadimsdomedudidome Dimsdimmadimmadome, owner of the Duhdimmsdimmadaledimmadimmsdome Dudiduhdimmsdaledimma Dimmsdale Dimmadome! 
             Thank you for locating my long-lost son, Dale Dummadomedimmsmadomedimmadomedimmsdaledudimmadomedougsdaledimmadome, heir to the Dimmsmadomedimmsdomedimmadaledaledimmadoodougdimmadimmsdomedaledome fortune! 
             If there’s anything I can ever do to repay you for your kindness, all you need to do is ask
-        """.trimIndent(),
-        dateTime = "2012-2-9 12:51"
+        """.trimIndent(), dateTime = "2012-2-9 12:51"
     )
     NotesAppTheme {
-        DetailNoteContent(
-            title = fakeNote.title,
+        DetailNoteContent(title = fakeNote.title,
             contentText = fakeNote.contentText,
             dateTime = fakeNote.dateTime,
             onTitleChange = {},
             onContentTextChange = {},
             isDeleteNoteButtonShown = true,
             deleteNote = {},
-            navigateBack = {}
-        )
+            navigateBack = {})
     }
 }

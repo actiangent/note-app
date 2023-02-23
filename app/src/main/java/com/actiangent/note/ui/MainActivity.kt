@@ -1,4 +1,4 @@
-package com.actiangent.note
+package com.actiangent.note.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -14,7 +14,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.actiangent.note.data.model.emptyNote
 import com.actiangent.note.ui.navigation.ROUTE_DETAIL_ARG
 import com.actiangent.note.ui.navigation.Screen
 import com.actiangent.note.ui.screen.detailnote.DetailNoteScreen
@@ -55,10 +54,8 @@ fun NotesApp(
             route = Screen.DetailNote.route,
             arguments = listOf(navArgument(ROUTE_DETAIL_ARG) { type = NavType.IntType })
         ) {
-            val id: Int = it.arguments?.getInt(ROUTE_DETAIL_ARG) ?: emptyNote.id
             DetailNoteScreen(
                 modifier = modifier,
-                noteId = id,
                 navigateBack = { navController.navigateUp() }
             )
         }
