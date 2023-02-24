@@ -7,9 +7,9 @@
     <string name="cancel">Cancel</string>
     <string name="confirm_deletion">Confirm deletion</string>
     <string name="confirm_deletion_text">Are you sure want to delete this note ?</string>
-    <string name="about_me">About Me</string>
-    <string name="about_me_text">Hi, my name is Hisyam Fausta and i make this app</string>
-    <string name="about_me_email">hisyam.fausta@gmail.com</string>
+    <string name="load_note_error">Failed to load your notes</string>
+    <string name="empty_notes_message">Start writing some notes</string>
+    <string name="empty_searched_notes_message">No matching note</string>
 
     <string name="back_content_description">back</string>
     <string name="pin_content_description">pin</string>
@@ -18,5 +18,5 @@
     <string name="new_note_content_description">new note</string>
     <string name="clear_query_content_description">new note</string>
     <string name="drawer_content_description">drawer</string>
-    <string name="image_about_me_content_description">my photo</string>
+    <string name="empty_notes_content_description">no notes</string>
 </resources>

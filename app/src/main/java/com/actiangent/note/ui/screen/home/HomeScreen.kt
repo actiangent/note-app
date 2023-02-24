@@ -7,24 +7,24 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.actiangent.note.R
 import com.actiangent.note.data.model.Note
@@ -35,41 +35,100 @@ import com.actiangent.note.ui.theme.NotesAppTheme
 import kotlinx.coroutines.launch
 
 @Composable
+fun EmptyContent(
+    isContentEmpty: Boolean,
+    emptyContent: @Composable () -> Unit,
+    content: @Composable () -> Unit,
+) {
+    if (isContentEmpty) {
+        emptyContent()
+    } else {
+        content()
+    }
+}
+
+@Composable
+fun EmptyHomeContent(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.baseline_edit_note_24),
+            contentDescription = stringResource(
+                id = R.string.empty_notes_content_description
+            ),
+            tint = MaterialTheme.colors.primary
+        )
+        Spacer(Modifier.height(16.dp))
+        Text(
+            text = stringResource(id = R.string.empty_notes_message),
+            color = MaterialTheme.colors.primary,
+            fontSize = 16.sp
+        )
+    }
+}
+
+@Composable
+fun EmptySearchedHomeContent(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = stringResource(id = R.string.empty_searched_notes_message),
+            color = MaterialTheme.colors.primary,
+            fontSize = 16.sp
+        )
+    }
+}
+
+@Composable
 fun HomeContent(
     notes: List<Note>,
     listState: LazyStaggeredGridState,
     onClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val staggeredGridCellsCount = when (LocalConfiguration.current.orientation) {
-        Configuration.ORIENTATION_LANDSCAPE -> {
-            3
-        }
-        else -> {
-            2
-        }
-    }
-
-    LazyVerticalStaggeredGrid(
-        state = listState,
-        columns = StaggeredGridCells.Fixed(staggeredGridCellsCount),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
-            .padding(start = 4.dp, end = 4.dp)
-            .semantics(mergeDescendants = true) { contentDescription = "Note list" }
-            .testTag("noteList")
+    EmptyContent(
+        isContentEmpty = notes.isEmpty(),
+        emptyContent = { EmptyHomeContent() }
     ) {
-        items(staggeredGridCellsCount) {
-            Box(modifier = modifier.padding(top = 64.dp))
+        val staggeredGridCellsCount = when (LocalConfiguration.current.orientation) {
+            Configuration.ORIENTATION_LANDSCAPE -> {
+                3
+            }
+            else -> {
+                2
+            }
         }
-        items(items = notes, key = { note ->
-            note.id
-        }) { note ->
-            NoteItem(note = note, onClick = onClick)
+
+        LazyVerticalStaggeredGrid(
+            state = listState,
+            columns = StaggeredGridCells.Fixed(staggeredGridCellsCount),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = modifier
+                .padding(start = 4.dp, end = 4.dp)
+                .semantics(mergeDescendants = true) { contentDescription = "Note list" }
+                .testTag("noteList")
+        ) {
+            items(staggeredGridCellsCount) {
+                Box(modifier = modifier.padding(top = 64.dp))
+            }
+            items(items = notes, key = { note ->
+                note.id
+            }) { note ->
+                NoteItem(note = note, onClick = onClick)
+            }
         }
     }
-
 }
 
 @Composable
@@ -89,15 +148,8 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val notesState by viewModel.uiState.collectAsState()
     val listState = rememberLazyStaggeredGridState()
     val homeScreenState = rememberScaffoldState()
-    val showSearchBar: Boolean by remember {
-        derivedStateOf {
-            !listState.isScrollInProgress or (listState.firstVisibleItemIndex < 3) or
-                    notesState.searchQuery.isNotBlank()
-        }
-    }
 
     if (homeScreenState.drawerState.isOpen) {
         BackHandler {
@@ -132,16 +184,28 @@ fun HomeScreen(
         },
         floatingActionButtonPosition = FabPosition.End
     ) { paddingValues ->
+        val uiState by viewModel.uiState.collectAsState()
+        val showSearchBar: Boolean by remember {
+            derivedStateOf {
+                !listState.isScrollInProgress or (listState.firstVisibleItemIndex < 3) or
+                        uiState.searchQuery.isNotBlank()
+            }
+        }
+
         Box(
             modifier = modifier
                 .padding(paddingValues)
         ) {
-            HomeContent(
-                notes = notesState.notes,
-                onClick = navigateToDetailNote,
-                listState = listState,
-                modifier = modifier
-            )
+            if (uiState.searchQuery.isNotBlank() and uiState.notes.isEmpty()) {
+                EmptySearchedHomeContent(modifier = modifier)
+            } else {
+                HomeContent(
+                    notes = uiState.notes,
+                    onClick = navigateToDetailNote,
+                    listState = listState,
+                    modifier = modifier
+                )
+            }
 
             AnimatedVisibility(
                 visible = showSearchBar,
@@ -155,13 +219,21 @@ fun HomeScreen(
                     .padding(top = 16.dp, start = 8.dp, end = 8.dp, bottom = 4.dp)
             ) {
                 SearchBar(
-                    query = notesState.searchQuery,
+                    query = uiState.searchQuery,
                     onQueryChange = viewModel::setQuery,
                     clearQuery = viewModel::clearQuery,
                     onDrawerIconClick = {
                         coroutineScope.launch { homeScreenState.drawerState.open() }
                     }
                 )
+            }
+
+            uiState.snackbarMessage?.let { message ->
+                val snackbarText = stringResource(message)
+                LaunchedEffect(homeScreenState, viewModel, message, snackbarText) {
+                    homeScreenState.snackbarHostState.showSnackbar(snackbarText)
+                    viewModel.snackbarShown()
+                }
             }
         }
     }

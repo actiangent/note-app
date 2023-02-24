@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
-class NoteTest {
+class NoteTest { // TODO - e2e test
 
     @get:Rule(order = 0)
     var hiltRule = HiltAndroidRule(this)

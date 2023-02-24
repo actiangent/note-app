@@ -152,7 +152,8 @@ fun DetailNoteScreen(
         color = MaterialTheme.colors.background,
         contentColor = MaterialTheme.colors.primary
     ) {
-        DetailNoteContent(title = uiState.title,
+        DetailNoteContent(
+            title = uiState.title,
             contentText = uiState.contentText,
             dateTime = uiState.dateTime,
             onTitleChange = viewModel::setNoteTitle,
@@ -165,7 +166,8 @@ fun DetailNoteScreen(
             navigateBack = {
                 viewModel.saveNote()
                 navigateBack()
-            })
+            }
+        )
     }
 }
 

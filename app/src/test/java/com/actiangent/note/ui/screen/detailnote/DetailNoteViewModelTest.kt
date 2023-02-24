@@ -1,5 +1,6 @@
 package com.actiangent.note.ui.screen.detailnote
 
+import androidx.lifecycle.SavedStateHandle
 import com.actiangent.note.MainTestDispatcherRule
 import com.actiangent.note.data.fake.FakeRepository
 import com.actiangent.note.data.fake.insertNoteBlocking
@@ -22,7 +23,7 @@ class DetailNoteViewModelTest {
 
     @Before
     fun setUp() {
-        detailNoteViewModel = DetailNoteViewModel(repository)
+        detailNoteViewModel = DetailNoteViewModel(repository, SavedStateHandle())
     }
 
     @Test
