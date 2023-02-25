@@ -3,7 +3,6 @@ package com.actiangent.note.ui.screen.detailnote
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.actiangent.note.data.Result
 import com.actiangent.note.data.model.Note
 import com.actiangent.note.data.model.emptyNote
 import com.actiangent.note.data.repository.NoteRepository
@@ -43,21 +42,15 @@ class DetailNoteViewModel @Inject constructor(
     }
 
     private fun getNote(id: Int) = viewModelScope.launch {
-        repository.getNoteById(id).let { result ->
-            when (result) {
-                is Result.Success -> {
-                    val note = result.data
-                    _uiState.update {
-                        it.copy(
-                            noteId = note.id,
-                            title = note.title,
-                            contentText = note.contentText,
-                            dateTime = note.dateTime,
-                            isNoteSaved = true
-                        )
-                    }
-                }
-                else -> {}
+        repository.getNoteById(id)?.let { note ->
+            _uiState.update {
+                it.copy(
+                    noteId = note.id,
+                    title = note.title,
+                    contentText = note.contentText,
+                    dateTime = note.dateTime,
+                    isNoteSaved = true
+                )
             }
         }
     }

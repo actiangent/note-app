@@ -1,9 +1,11 @@
 package com.actiangent.note.data.fake
 
-import com.actiangent.note.data.Result
 import com.actiangent.note.data.model.Note
 import com.actiangent.note.data.repository.NoteRepository
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.runBlocking
 
 class FakeRepository : NoteRepository {
@@ -39,20 +41,19 @@ class FakeRepository : NoteRepository {
         }
     }
 
-    override fun observeNotes(): Flow<Result<List<Note>>> = fakeNotes.map {
+    override fun observeNotes(): Flow<List<Note>> = fakeNotes.map {
         if (shouldReturnError) {
-            Result.Error(Exception())
+            throw Exception("Test exception")
         } else {
-            Result.Success(it)
+            it
         }
     }
 
-    override suspend fun getNoteById(noteId: Int): Result<Note> {
-        val note = fakeNotes.map { it.firstOrNull { note -> note.id == noteId } }
+    override suspend fun getNoteById(noteId: Int): Note? =
+        fakeNotes.value.firstOrNull { note -> note.id == noteId }
 
-        return note.first()?.let {
-            Result.Success(it)
-        } ?: Result.Error(Exception("Note not found!"))
+    fun shouldThrowError(value: Boolean) {
+        shouldReturnError = value
     }
 
     fun getNotes() = fakeNotes.value

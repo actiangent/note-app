@@ -3,7 +3,6 @@ package com.actiangent.note.ui.screen.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.actiangent.note.R
-import com.actiangent.note.data.Result
 import com.actiangent.note.data.model.Note
 import com.actiangent.note.data.repository.NoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,23 +23,17 @@ class HomeViewModel @Inject constructor(
     private val _snackbarMessage: MutableStateFlow<Int?> = MutableStateFlow(null)
     private val _queryFlow = MutableStateFlow("")
     private val _notesFlow = repository.observeNotes()
-        .map { resultNotes ->
-            when (resultNotes) {
-                is Result.Success -> {
-                    resultNotes.data
-                }
-                is Result.Error -> {
-                    showSnackbarMessage(R.string.load_note_error)
-                    emptyList()
-                }
-            }
+        .catch {
+            showSnackbarMessage(R.string.load_note_error)
+            emit(emptyList()) // emit empty list in order to avoid canceling the flow
         }
 
     val uiState: StateFlow<HomeNoteUiState> =
-        combine(_queryFlow, _notesFlow) { query, notes ->
+        combine(_queryFlow, _notesFlow, _snackbarMessage) { query, notes, message ->
             HomeNoteUiState(
                 notes = notes.searchNotes(query),
                 searchQuery = query,
+                snackbarMessage = message
             )
         }.stateIn(
             scope = viewModelScope,
@@ -52,7 +45,7 @@ class HomeViewModel @Inject constructor(
         _snackbarMessage.value = message
     }
 
-    fun snackbarShown() {
+    fun snackbarMessageShown() {
         _snackbarMessage.value = null
     }
 

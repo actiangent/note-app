@@ -32,40 +32,72 @@ class HomeScreenTest {
     @Before
     fun setUp() {
         hiltRule.inject()
-
-        // given - add notes to repository
-        val note1 = Note("First note title", "First note content", "1990-01-01 00:00", 1)
-        val note2 = Note("Second note title", "Second note content", "1990-01-02 00:10", 2)
-        val note3 = Note("Third note title", "Third note content", "1990-01-03 00:20", 3)
-        repository.insertNoteBlocking(note1)
-        repository.insertNoteBlocking(note2)
-        repository.insertNoteBlocking(note3)
-
-        // when - show HomeScreen
-        composeTestRule.setContent {
-            NotesAppTheme {
-                HomeScreen(
-                    navigateToDetailNote = {},
-                    navigateToAbout = {},
-                    viewModel = HomeViewModel(repository)
-                )
-            }
-        }
     }
 
     @Test
     fun noteList_displayCorrectData() {
+        // given - add notes to repository
+        addNotesToRepository()
+
+        // when - show HomeScreen
+        setContent()
+
         // then - verify note list displaying correct data
         composeTestRule.onNodeWithTag("noteList").apply {
             assertIsDisplayed()
-            hasTextExactly("Why is six afraid of seven?")
-            hasTextExactly("Doug Dimmadome")
-            hasTextExactly("This is note title")
+            hasTextExactly("First note title")
+            hasTextExactly("Second note title")
+            hasTextExactly("Third note title")
         }
     }
 
     @Test
+    fun noteList_searchNote() {
+        // given - add notes to repository
+        addNotesToRepository()
+
+        // when - show HomeScreen and input search query
+        setContent()
+
+        composeTestRule.onNodeWithTag("noteSearchInputField")
+            .performTextInput("Second note")
+
+        // then - verify note list displaying correct searched data
+        composeTestRule.onNodeWithTag("noteList").apply {
+            assertIsDisplayed()
+            hasTextExactly("Second note title")
+        }
+    }
+
+    @Test
+    fun noteList_searchNoteNoMatch() {
+        // given - add notes to repository
+        addNotesToRepository()
+
+        // when - show HomeScreen and input search query
+        setContent()
+
+        composeTestRule.onNodeWithTag("noteSearchInputField")
+            .performTextInput("Fourth note")
+
+        // then - no match content shown
+        composeTestRule.onNodeWithText("No matching note").assertIsDisplayed()
+    }
+
+    @Test
+    fun noteList_empty() {
+        // when - show HomeScreen
+        setContent()
+
+        // then - verify empty content shown
+        composeTestRule.onNodeWithText("Start writing some notes").assertIsDisplayed()
+    }
+
+    @Test
     fun addNoteButton_isDisplayedAndClickable() {
+        // when - show HomeScreen
+        setContent()
+
         // then - verify new note floating action button
         composeTestRule.onNodeWithTag("addNoteButton").apply {
             assertIsDisplayed()
@@ -75,6 +107,9 @@ class HomeScreenTest {
 
     @Test
     fun searchBar_worksProperly() {
+        // when - show HomeScreen
+        setContent()
+
         // then
         // verify and perform input on SearchBar input field
         composeTestRule.onNodeWithTag("noteSearchInputField").apply {
@@ -101,6 +136,26 @@ class HomeScreenTest {
         // verify SearchBar input field has empty string
         composeTestRule.onNodeWithTag("noteSearchInputField").apply {
             hasTextExactly("")
+        }
+    }
+
+    private fun addNotesToRepository() {
+        val note1 = Note("First note title", "First note content", "1990-01-01 00:00", 1)
+        val note2 = Note("Second note title", "Second note content", "1990-01-02 00:10", 2)
+        val note3 = Note("Third note title", "Third note content", "1990-01-03 00:20", 3)
+        repository.insertNoteBlocking(note1)
+        repository.insertNoteBlocking(note2)
+        repository.insertNoteBlocking(note3)
+    }
+
+    private fun setContent() {
+        composeTestRule.setContent {
+            NotesAppTheme {
+                HomeScreen(
+                    navigateToDetailNote = {},
+                    viewModel = HomeViewModel(repository)
+                )
+            }
         }
     }
 }

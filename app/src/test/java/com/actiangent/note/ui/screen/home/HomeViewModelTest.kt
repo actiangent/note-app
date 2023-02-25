@@ -1,6 +1,7 @@
 package com.actiangent.note.ui.screen.home
 
 import com.actiangent.note.MainTestDispatcherRule
+import com.actiangent.note.R
 import com.actiangent.note.data.fake.FakeRepository
 import com.actiangent.note.data.fake.insertNoteBlocking
 import com.actiangent.note.data.model.Note
@@ -35,12 +36,12 @@ class HomeViewModelTest {
     @Test
     fun `load correct notes data`() = runTest {
         // when - get notes
-        val result = homeViewModel.uiState.first()
+        val notes = homeViewModel.uiState.first().notes
 
         // then - verify loaded notes as expected
         val expectedNotes = repository.getNotes()
-        assertEquals(expectedNotes.size, result.notes.size)
-        assertEquals(expectedNotes, result.notes)
+        assertEquals(expectedNotes.size, notes.size)
+        assertEquals(expectedNotes, notes)
     }
 
     @Test
@@ -49,13 +50,24 @@ class HomeViewModelTest {
         val searchedQuery = "Second"
         homeViewModel.setQuery(searchedQuery)
 
+        val notes = homeViewModel.uiState.first().notes
+
         // then - verify loaded notes as expected
         val expectedNote =
             repository.getNotes().filter { note -> note.title.contains(searchedQuery) }
+        assertEquals(expectedNote.size, notes.size)
+        assertEquals(expectedNote, notes)
+    }
 
-        val result = homeViewModel.uiState.first()
-        assertEquals(expectedNote.size, result.notes.size)
-        assertEquals(expectedNote, result.notes)
+    @Test
+    fun `load notes error`() = runTest {
+        // when - repository throw error
+        repository.shouldThrowError(true)
+
+        // then -
+        val uiState = homeViewModel.uiState.first()
+        assertEquals(emptyList<Note>(), uiState.notes)
+        assertEquals(R.string.load_note_error, uiState.snackbarMessage)
     }
 
 }

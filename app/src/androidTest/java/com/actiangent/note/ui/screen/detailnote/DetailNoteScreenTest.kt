@@ -2,12 +2,14 @@ package com.actiangent.note.ui.screen.detailnote
 
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.lifecycle.SavedStateHandle
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.actiangent.note.HiltTestActivity
 import com.actiangent.note.data.fake.insertNoteBlocking
 import com.actiangent.note.data.model.Note
 import com.actiangent.note.data.model.emptyNote
 import com.actiangent.note.data.repository.NoteRepository
+import com.actiangent.note.ui.navigation.ROUTE_DETAIL_ARG
 import com.actiangent.note.ui.theme.NotesAppTheme
 import com.actiangent.note.util.todayDateTimeFormatted
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -30,7 +32,7 @@ class DetailNoteScreenTest {
 
     @Inject
     lateinit var repository: NoteRepository
-
+    private val note = Note("Note title", "Note content", "1990-01-01 00:00", 1)
 
     @Before
     fun setUp() {
@@ -40,11 +42,10 @@ class DetailNoteScreenTest {
     @Test
     fun noteDetails_displayCorrectData() {
         // given - add note to repository
-        val note = Note("Note title", "Note content", "1990-01-01 00:00", 1)
         repository.insertNoteBlocking(note)
 
         // when - detail note screen opened with given note id
-        setContent(note)
+        setContent(note.id)
 
         // then - note detail displayed on the screen
         // make sure title are both shown and correct
@@ -76,7 +77,7 @@ class DetailNoteScreenTest {
     @Test
     fun newNoteDetails_displayBlankData() {
         // when - detail note screen opened with emptyNote id
-        setContent(emptyNote)
+        setContent(emptyNote.id)
         val noteDateTime = todayDateTimeFormatted()
 
         // then - note detail displayed on the screen
@@ -109,11 +110,10 @@ class DetailNoteScreenTest {
     @Test
     fun noteDetails_verifyDeleteDialog() {
         // given - add note to repository
-        val note = Note("Note title", "Note content", "1990-01-01 00:00", 1)
         repository.insertNoteBlocking(note)
 
         // when - detail note screen opened with given note id
-        setContent(note)
+        setContent(note.id)
 
         // verify and perform click on delete note button
         composeTestRule.onNodeWithTag("deleteNoteButton").apply {
@@ -135,13 +135,15 @@ class DetailNoteScreenTest {
         }
     }
 
-    private fun setContent(note: Note) {
+    private fun setContent(noteIdArg: Int) {
         composeTestRule.setContent {
             NotesAppTheme {
                 DetailNoteScreen(
                     navigateBack = {},
-                    noteId = note.id,
-                    viewModel = DetailNoteViewModel(repository)
+                    viewModel = DetailNoteViewModel(
+                        repository,
+                        SavedStateHandle(mapOf(ROUTE_DETAIL_ARG to noteIdArg))
+                    )
                 )
             }
         }

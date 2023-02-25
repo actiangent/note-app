@@ -232,7 +232,7 @@ fun HomeScreen(
                 val snackbarText = stringResource(message)
                 LaunchedEffect(homeScreenState, viewModel, message, snackbarText) {
                     homeScreenState.snackbarHostState.showSnackbar(snackbarText)
-                    viewModel.snackbarShown()
+                    viewModel.snackbarMessageShown()
                 }
             }
         }
