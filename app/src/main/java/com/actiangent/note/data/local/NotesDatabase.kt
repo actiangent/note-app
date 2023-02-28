@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.actiangent.note.data.model.Note
 
-@Database(entities = [Note::class], version = 1)
+@Database(entities = [Note::class], version = 1, exportSchema = false)
 abstract class NotesDatabase : RoomDatabase() {
 
     abstract fun notesDao(): NotesDao
@@ -23,8 +23,6 @@ abstract class NotesDatabase : RoomDatabase() {
         fun getInstance(context: Context): NotesDatabase = instance ?: synchronized(this) {
             instance ?: buildDatabase(context).also { instance = it }
         }
-
     }
-
 }
 

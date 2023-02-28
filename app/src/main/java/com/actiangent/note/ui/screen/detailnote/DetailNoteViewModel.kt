@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.actiangent.note.data.model.Note
 import com.actiangent.note.data.model.emptyNote
 import com.actiangent.note.data.repository.NoteRepository
-import com.actiangent.note.ui.navigation.ROUTE_DETAIL_ARG
+import com.actiangent.note.ui.navigation.NoteRouteArgs
 import com.actiangent.note.util.todayDateTimeFormatted
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,7 +30,7 @@ class DetailNoteViewModel @Inject constructor(
 ) : ViewModel() {
 
     // use SavedStateHandle to retrieve noteId navigation argument
-    private val noteId: Int? = savedStateHandle[ROUTE_DETAIL_ARG]
+    private val noteId: Int? = savedStateHandle[NoteRouteArgs.ROUTE_DETAIL_ARG]
 
     private val _uiState = MutableStateFlow(DetailNoteUiState())
     val uiState get() = _uiState.asStateFlow()
@@ -38,20 +38,6 @@ class DetailNoteViewModel @Inject constructor(
     init {
         if (noteId != null) {
             getNote(noteId)
-        }
-    }
-
-    private fun getNote(id: Int) = viewModelScope.launch {
-        repository.getNoteById(id)?.let { note ->
-            _uiState.update {
-                it.copy(
-                    noteId = note.id,
-                    title = note.title,
-                    contentText = note.contentText,
-                    dateTime = note.dateTime,
-                    isNoteSaved = true
-                )
-            }
         }
     }
 
@@ -71,25 +57,6 @@ class DetailNoteViewModel @Inject constructor(
                 dateTime = todayDateTimeFormatted(),
             )
         }
-    }
-
-    private fun createNewNote() = viewModelScope.launch {
-        val newNote = Note(
-            title = uiState.value.title,
-            contentText = uiState.value.contentText,
-            dateTime = todayDateTimeFormatted()
-        )
-        repository.insertNote(newNote)
-    }
-
-    private fun updateNote() = viewModelScope.launch {
-        val updatedNote = Note(
-            title = uiState.value.title,
-            contentText = uiState.value.contentText,
-            dateTime = uiState.value.dateTime,
-            id = uiState.value.noteId
-        )
-        repository.updateNote(updatedNote)
     }
 
     fun saveNote() {
@@ -117,6 +84,39 @@ class DetailNoteViewModel @Inject constructor(
             }
         } else {
             return
+        }
+    }
+
+    private fun createNewNote() = viewModelScope.launch {
+        val newNote = Note(
+            title = uiState.value.title,
+            contentText = uiState.value.contentText,
+            dateTime = todayDateTimeFormatted()
+        )
+        repository.insertNote(newNote)
+    }
+
+    private fun updateNote() = viewModelScope.launch {
+        val updatedNote = Note(
+            title = uiState.value.title,
+            contentText = uiState.value.contentText,
+            dateTime = uiState.value.dateTime,
+            id = uiState.value.noteId
+        )
+        repository.updateNote(updatedNote)
+    }
+
+    private fun getNote(id: Int) = viewModelScope.launch {
+        repository.getNoteById(id)?.let { note ->
+            _uiState.update {
+                it.copy(
+                    noteId = note.id,
+                    title = note.title,
+                    contentText = note.contentText,
+                    dateTime = note.dateTime,
+                    isNoteSaved = true
+                )
+            }
         }
     }
 

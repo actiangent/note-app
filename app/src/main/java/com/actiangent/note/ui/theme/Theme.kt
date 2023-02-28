@@ -24,15 +24,6 @@ private val LightColorPalette = lightColors(
     secondary = lightGray,
     background = slightDarkWhite,
     surface = slightDarkWhite,
-
-    /* Other default colors to override
-    background = Color.White,
-    surface = Color.White,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
-    */
 )
 
 @Composable
@@ -57,8 +48,6 @@ fun NotesAppTheme(
 
     MaterialTheme(
         colors = colors,
-        typography = Typography,
-        shapes = Shapes,
     ) {
         CompositionLocalProvider(
             LocalIndication provides rememberRipple(color = colors.secondary),

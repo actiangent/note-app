@@ -10,19 +10,54 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.actiangent.note.R
-import com.actiangent.note.data.model.Note
 import com.actiangent.note.ui.components.DeleteNoteConfirmationDialog
 import com.actiangent.note.ui.theme.NotesAppTheme
+
+@Composable
+fun DetailNoteScreen(
+    navigateBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: DetailNoteViewModel = hiltViewModel()
+) {
+    Surface(
+        modifier = modifier.fillMaxSize(),
+        color = MaterialTheme.colors.background,
+        contentColor = MaterialTheme.colors.primary
+    ) {
+        val uiState by viewModel.uiState.collectAsState()
+
+        DetailNoteContent(
+            title = uiState.title,
+            contentText = uiState.contentText,
+            dateTime = uiState.dateTime,
+            onTitleChange = viewModel::setNoteTitle,
+            onContentTextChange = viewModel::setNoteContentText,
+            isDeleteNoteButtonShown = uiState.isNoteSaved,
+            deleteNote = {
+                viewModel.deleteNote()
+                navigateBack()
+            },
+            navigateBack = {
+                viewModel.saveNote()
+                navigateBack()
+            }
+        )
+    }
+
+    BackHandler {
+        viewModel.saveNote()
+        navigateBack()
+    }
+}
 
 @Composable
 fun DetailNoteContent(
@@ -69,10 +104,7 @@ fun DetailNoteContent(
                 if (isDeleteNoteButtonShown) {
                     IconButton(onClick = { showDialog = true },
                         modifier = modifier
-                            .semantics(mergeDescendants = true) {
-                                contentDescription = "Delete Note"
-                            }
-                            .testTag("deleteNoteButton")) {
+                            .semantics(mergeDescendants = true) { testTag = "deleteNoteButton" }) {
                         Icon(
                             imageVector = Icons.Outlined.Delete,
                             contentDescription = stringResource(id = R.string.back_content_description),
@@ -102,8 +134,7 @@ fun DetailNoteContent(
             modifier = modifier
                 .width(IntrinsicSize.Min)
                 .padding(start = 2.dp)
-                .semantics(mergeDescendants = true) { contentDescription = "Note title" }
-                .testTag("titleTextField")
+                .semantics(mergeDescendants = true) { testTag = "titleTextField" }
         )
         Text(
             text = dateTime,
@@ -113,8 +144,7 @@ fun DetailNoteContent(
             ),
             modifier = modifier
                 .padding(start = 20.dp)
-                .semantics(mergeDescendants = true) { contentDescription = "Note updated at" }
-                .testTag("updatedAt")
+                .semantics(mergeDescendants = true) { testTag = "updatedAt" }
         )
         TextField(
             value = contentText,
@@ -131,42 +161,7 @@ fun DetailNoteContent(
             modifier = modifier
                 .width(IntrinsicSize.Min)
                 .padding(start = 4.dp, end = 4.dp)
-                .semantics(mergeDescendants = true) { contentDescription = "Note content" }
-                .testTag("contentTextField")
-        )
-    }
-
-    BackHandler { navigateBack() }
-}
-
-@Composable
-fun DetailNoteScreen(
-    navigateBack: () -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: DetailNoteViewModel = hiltViewModel()
-) {
-    val uiState by viewModel.uiState.collectAsState()
-
-    Surface(
-        modifier = modifier.fillMaxSize(),
-        color = MaterialTheme.colors.background,
-        contentColor = MaterialTheme.colors.primary
-    ) {
-        DetailNoteContent(
-            title = uiState.title,
-            contentText = uiState.contentText,
-            dateTime = uiState.dateTime,
-            onTitleChange = viewModel::setNoteTitle,
-            onContentTextChange = viewModel::setNoteContentText,
-            isDeleteNoteButtonShown = uiState.isNoteSaved,
-            deleteNote = {
-                viewModel.deleteNote()
-                navigateBack()
-            },
-            navigateBack = {
-                viewModel.saveNote()
-                navigateBack()
-            }
+                .semantics(mergeDescendants = true) { testTag = "contentTextField" }
         )
     }
 }
@@ -174,21 +169,22 @@ fun DetailNoteScreen(
 @Preview(showBackground = true)
 @Composable
 fun DetailNoteScreenPreview() {
-    val fakeNote = Note(
-        id = 3, title = "Doug Dimmadome", contentText = """
-            My name is Dummsdaledimmadaledimmadimsdomedudidome Dimsdimmadimmadome, owner of the Duhdimmsdimmadaledimmadimmsdome Dudiduhdimmsdaledimma Dimmsdale Dimmadome! 
-            Thank you for locating my long-lost son, Dale Dummadomedimmsmadomedimmadomedimmsdaledudimmadomedougsdaledimmadome, heir to the Dimmsmadomedimmsdomedimmadaledaledimmadoodougdimmadimmsdomedaledome fortune! 
-            If there’s anything I can ever do to repay you for your kindness, all you need to do is ask
-        """.trimIndent(), dateTime = "2012-2-9 12:51"
-    )
     NotesAppTheme {
-        DetailNoteContent(title = fakeNote.title,
-            contentText = fakeNote.contentText,
-            dateTime = fakeNote.dateTime,
-            onTitleChange = {},
-            onContentTextChange = {},
-            isDeleteNoteButtonShown = true,
-            deleteNote = {},
-            navigateBack = {})
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colors.background,
+            contentColor = MaterialTheme.colors.primary
+        ) {
+            DetailNoteContent(
+                title = "Note title",
+                contentText = "Note content",
+                dateTime = "1990-01-01 00:00",
+                onTitleChange = {},
+                onContentTextChange = {},
+                isDeleteNoteButtonShown = true,
+                deleteNote = {},
+                navigateBack = {}
+            )
+        }
     }
 }

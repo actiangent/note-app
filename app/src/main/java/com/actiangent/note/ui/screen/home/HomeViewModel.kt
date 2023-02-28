@@ -25,13 +25,13 @@ class HomeViewModel @Inject constructor(
     private val _notesFlow = repository.observeNotes()
         .catch {
             showSnackbarMessage(R.string.load_note_error)
-            emit(emptyList()) // emit empty list in order to avoid canceling the flow
+            emit(emptyList()) // emit empty list to avoid canceling the flow
         }
 
     val uiState: StateFlow<HomeNoteUiState> =
         combine(_queryFlow, _notesFlow, _snackbarMessage) { query, notes, message ->
             HomeNoteUiState(
-                notes = notes.searchNotes(query),
+                notes = notes.search(query),
                 searchQuery = query,
                 snackbarMessage = message
             )
@@ -57,7 +57,7 @@ class HomeViewModel @Inject constructor(
         _queryFlow.value = ""
     }
 
-    private fun List<Note>.searchNotes(query: String) = this.filter { note ->
+    private fun List<Note>.search(query: String) = this.filter { note ->
         note.title.contains(query, ignoreCase = true) or
                 note.contentText.contains(query, ignoreCase = true)
     }

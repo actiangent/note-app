@@ -5,7 +5,7 @@ import com.actiangent.note.MainTestDispatcherRule
 import com.actiangent.note.data.fake.FakeRepository
 import com.actiangent.note.data.fake.insertNoteBlocking
 import com.actiangent.note.data.model.Note
-import com.actiangent.note.ui.navigation.ROUTE_DETAIL_ARG
+import com.actiangent.note.ui.navigation.NoteRouteArgs
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -101,7 +101,7 @@ class DetailNoteViewModelTest {
     private fun setupDetailNoteViewModel(noteIdArg: Int) {
         detailNoteViewModel = DetailNoteViewModel(
             repository,
-            SavedStateHandle(mapOf(ROUTE_DETAIL_ARG to noteIdArg))
+            SavedStateHandle(mapOf(NoteRouteArgs.ROUTE_DETAIL_ARG to noteIdArg))
         )
     }
 

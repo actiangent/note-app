@@ -9,7 +9,7 @@ import com.actiangent.note.data.fake.insertNoteBlocking
 import com.actiangent.note.data.model.Note
 import com.actiangent.note.data.model.emptyNote
 import com.actiangent.note.data.repository.NoteRepository
-import com.actiangent.note.ui.navigation.ROUTE_DETAIL_ARG
+import com.actiangent.note.ui.navigation.NoteRouteArgs.ROUTE_DETAIL_ARG
 import com.actiangent.note.ui.theme.NotesAppTheme
 import com.actiangent.note.util.todayDateTimeFormatted
 import dagger.hilt.android.testing.HiltAndroidRule

@@ -38,7 +38,6 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
         freeCompilerArgs += [
-                "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
                 "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi" // LazyStaggeredGrid
         ]
     }
@@ -46,7 +45,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion kotlinCompilerComposeVersion
+        kotlinCompilerExtensionVersion composeCompilerVersion
     }
     packagingOptions {
         resources {
@@ -70,6 +69,7 @@ dependencies {
     implementation "androidx.compose.material:material:$composeMaterialVersion"
     implementation "androidx.navigation:navigation-compose:$composeNavigationVersion"
 
+    // Accompanist
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion"
 
     // Hilt
@@ -84,19 +84,18 @@ dependencies {
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.2.0")
 
-    implementation 'androidx.test:core-ktx:1.5.0'
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation 'androidx.test.ext:junit:1.1.4'
+    implementation "androidx.test:core-ktx:$androidxTestVersion"
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "androidx.test.ext:junit:$junitExtVersion"
 
-    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+    androidTestImplementation "androidx.test.ext:junit:$junitExtVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$composeUiVersion"
 
-    testImplementation "androidx.arch.core:core-testing:2.1.0" // InstantTaskExecutorRule
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4" //TestDispatcher
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion" //TestDispatcher
 
-    androidTestImplementation "androidx.arch.core:core-testing:2.1.0" // InstantTaskExecutorRule
-    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4" //TestDispatcher
+    androidTestImplementation "androidx.arch.core:core-testing:$androidxArchTestVersion" // InstantTaskExecutorRule
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion" //TestDispatcher
 
     debugImplementation "androidx.compose.ui:ui-tooling:$composeUiVersion"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$composeUiVersion"
