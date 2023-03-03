@@ -17,15 +17,14 @@
             android:background="@drawable/note_card"
             android:padding="8dp">
 
-            <!-- fontWeight=600 - semiBold-->
             <TextView
                 android:id="@+id/note_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
                 android:maxLines="2"
                 android:textColor="?android:colorPrimary"
                 android:textSize="18sp"
-                android:fontFamily="sans-serif-medium"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Title" />

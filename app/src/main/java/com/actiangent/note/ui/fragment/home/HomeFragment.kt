@@ -6,6 +6,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -18,8 +19,10 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.transition.Slide
 import androidx.transition.Transition
 import androidx.transition.TransitionManager
+import com.actiangent.note.data.model.emptyNote
 import com.actiangent.note.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -29,6 +32,23 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var homeNoteListAdapter: HomeNoteListAdapter
+
+    private val isScrollInProgress = MutableStateFlow(false)
+    private val listItemPosition = MutableStateFlow(0)
+    private val searchBarQueryIsEmpty = MutableStateFlow(true)
+
+    private val showSearchBar =
+        combine(
+            isScrollInProgress,
+            listItemPosition,
+            searchBarQueryIsEmpty
+        ) { isScrollInProgress, listItemPosition, searchBarQueryIsEmpty ->
+            !isScrollInProgress or (listItemPosition < 3) or !searchBarQueryIsEmpty
+        }.stateIn(
+            lifecycleScope,
+            started = SharingStarted.Lazily,
+            initialValue = true
+        )
 
     private val viewModel: HomeViewModel by viewModels()
 
@@ -46,7 +66,9 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupSearchBarEditText()
         setupNoteListRecyclerView()
+        setupAddNoteFab()
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
@@ -55,10 +77,18 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                showSearchBar.collectLatest { showSearchBar ->
+                    animateSearchBarOnScroll(showSearchBar)
+                }
+            }
+        }
     }
 
     private fun animateSearchBarOnScroll(isVisible: Boolean) {
-        val searchBar = binding.searchBar.root
+        val searchBar = binding.searchbar.root
         val transition: Transition = Slide(Gravity.TOP).apply {
             duration = 350
             addTarget(searchBar)
@@ -68,26 +98,41 @@ class HomeFragment : Fragment() {
         searchBar.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
+    private fun setupSearchBarEditText() {
+        binding.searchbar.searchQueryEditText.doOnTextChanged { text, _, _, _ ->
+            viewModel.setSearchQuery(text.toString())
+            searchBarQueryIsEmpty.value = text.toString().isEmpty()
+        }
+    }
+
     private fun setupNoteListRecyclerView() {
         homeNoteListAdapter = HomeNoteListAdapter { noteId -> navigateToDetailNote(noteId) }
         binding.recyclerViewNotes.apply {
             val orientation = resources.configuration.orientation
             val spanCount = if (orientation == Configuration.ORIENTATION_LANDSCAPE) 3 else 2
 
+            val lm = StaggeredGridLayoutManager(spanCount, RecyclerView.VERTICAL)
+                .also { layoutManager = it }
             adapter = ConcatAdapter(HeaderNoteListAdapter(), homeNoteListAdapter)
-            layoutManager = StaggeredGridLayoutManager(spanCount, RecyclerView.VERTICAL)
 
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                    val pos = lm.findFirstVisibleItemPositions(null)
+                    listItemPosition.value = pos.first()
+                }
+
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
-                    if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-                        animateSearchBarOnScroll(false)
-                    } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        animateSearchBarOnScroll(true)
-                    }
+                    isScrollInProgress.value = (newState != RecyclerView.SCROLL_STATE_IDLE)
                 }
             })
         }
+    }
+
+    private fun setupAddNoteFab() {
+        binding.addNoteFab.setOnClickListener { navigateToDetailNote(emptyNote.id) }
     }
 
     private fun navigateToDetailNote(noteId: Int) {

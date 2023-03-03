@@ -1,18 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="viewModel"
-            type="com.actiangent.note.ui.fragment.detail.DetailNoteViewModel" />
+            type="com.actiangent.note.ui.fragment.detailnote.DetailNoteViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:context=".ui.fragment.detailnote.DetailNoteFragment">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/detail_note_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/note_title_edit_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:menu="@menu/detail_note_menu"
+                app:navigationIcon="@drawable/baseline_arrow_back_24" />
+
+            <EditText
+                android:id="@+id/note_title_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp"
+                android:autofillHints="Title"
+                android:background="@android:color/transparent"
+                android:cursorVisible="true"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="top"
+                android:hint="Title"
+                android:inputType="textMultiLine"
+                android:text="@{viewModel.uiState.title}"
+                android:textColor="?android:colorPrimary"
+                android:textCursorDrawable="@null"
+                android:textSize="22sp"
+                app:layout_constraintBottom_toTopOf="@id/note_datetime_text_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/detail_note_toolbar"
+                app:setTitleChanged="@{viewModel}" />
+
+            <TextView
+                android:id="@+id/note_datetime_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:gravity="start"
+                android:text="@{viewModel.uiState.dateTime}"
+                android:textColor="?android:colorPrimary"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toTopOf="@id/note_content_edit_text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/note_title_edit_text" />
+
+            <EditText
+                android:id="@+id/note_content_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:autofillHints="Note"
+                android:background="@android:color/transparent"
+                android:cursorVisible="true"
+                android:gravity="top"
+                android:hint="Note"
+                android:inputType="textMultiLine"
+                android:text="@{viewModel.uiState.contentText}"
+                android:textColor="?android:colorPrimary"
+                android:textCursorDrawable="@null"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/note_datetime_text_view"
+                app:setContentChanged="@{viewModel}" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 </layout>

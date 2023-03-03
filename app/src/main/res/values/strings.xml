@@ -1,5 +1,24 @@
 <resources>
     <string name="app_name">Note App</string>
+    <string name="note">Note</string>
+    <string name="note_title">Title</string>
+    <string name="search_note">Search your notes</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm_deletion">Confirm deletion</string>
+    <string name="confirm_deletion_text">Are you sure want to delete this note ?</string>
+    <string name="load_note_error">Failed to load your notes</string>
+    <string name="empty_notes_message">Start writing some notes</string>
+    <string name="empty_searched_notes_message">No matching note</string>
+
+    <string name="back_content_description">back</string>
+    <string name="pin_content_description">pin</string>
+    <string name="add_content_description">add</string>
+    <string name="about_content_description">about</string>
+    <string name="new_note_content_description">new note</string>
+    <string name="clear_query_content_description">new note</string>
+    <string name="drawer_content_description">drawer</string>
+    <string name="empty_notes_content_description">no notes</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

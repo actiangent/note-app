@@ -1,6 +1,5 @@
 package com.actiangent.note.data.repository
 
-import com.actiangent.note.data.Result
 import com.actiangent.note.data.model.Note
 import kotlinx.coroutines.flow.Flow
 
@@ -12,8 +11,8 @@ interface NoteRepository {
 
     suspend fun updateNote(note: Note)
 
-    fun observeNotes(): Flow<Result<List<Note>>>
+    fun observeNotes(): Flow<List<Note>>
 
-    suspend fun getNoteById(noteId: Int): Result<Note>
+    suspend fun getNoteById(noteId: Int): Note?
 
 }

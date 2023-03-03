@@ -1,11 +1,9 @@
 package com.actiangent.note.data.repository
 
-import com.actiangent.note.data.Result
 import com.actiangent.note.data.local.NotesDao
 import com.actiangent.note.data.model.Note
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class DefaultNoteRepository(
@@ -22,20 +20,10 @@ class DefaultNoteRepository(
     override suspend fun updateNote(note: Note) =
         withContext(ioDispatcher) { notesDao.update(note) }
 
-    override fun observeNotes(): Flow<Result<List<Note>>> =
-        notesDao.getAllNoteFlow().map { Result.Success(it) }
+    override fun observeNotes(): Flow<List<Note>> =
+        notesDao.getAllNoteFlow()
 
-    override suspend fun getNoteById(noteId: Int): Result<Note> = withContext(ioDispatcher) {
-        return@withContext try {
-            val note = notesDao.getNoteById(noteId)
-            if (note != null) {
-                Result.Success(note)
-            } else {
-                Result.Error(Exception("Note not found!"))
-            }
-        } catch (exception: Exception) {
-            Result.Error(exception)
-        }
-    }
+    override suspend fun getNoteById(noteId: Int): Note? =
+        notesDao.getNoteById(noteId)
 
 }
