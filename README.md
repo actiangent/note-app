@@ -28,10 +28,10 @@ showcase good android app architecture as described [here](https://developer.and
 In its different branches you will find the identical app implemented using Views (xml) and
 [Jetpack Compose](https://developer.android.com/jetpack/compose)
 
-| Branch                                                                        | Description                               |
-|-------------------------------------------------------------------------------|-------------------------------------------|
-| [main](https://github.com/googlesamples/android-architecture/tree/main)       | note app implemented with views (xml)     |
-| [compose](https://github.com/googlesamples/android-architecture/tree/compose) | note app implemented with Jetpack Compose |
+| Branch                                                         | Description                               |
+|----------------------------------------------------------------|-------------------------------------------|
+| [main](https://github.com/actiangent/note-app/tree/main)       | note app implemented with views (xml)     |
+| [compose](https://github.com/actiangent/note-app/tree/compose) | note app implemented with Jetpack Compose |
 
 ## Opening Project
 
