@@ -27,8 +27,8 @@ import kotlinx.coroutines.launch
 class DetailNoteFragment : Fragment() {
 
     private var _binding: FragmentNoteDetailBinding? = null
-    private val binding get() = _binding!!
     private var _deleteDialogBinding: DialogDeleteNoteBinding? = null
+    private val binding get() = _binding!!
     private val deleteDialogBinding get() = _deleteDialogBinding!!
 
     private var _deleteDialog: AlertDialog? = null
@@ -54,9 +54,10 @@ class DetailNoteFragment : Fragment() {
         }
         _deleteDialogBinding = DialogDeleteNoteBinding.inflate(layoutInflater)
 
-        _deleteDialog = MaterialAlertDialogBuilder(requireContext(), R.style.MaterialAlertDialog_Rounded)
-            .setView(deleteDialogBinding.root)
-            .create()
+        _deleteDialog =
+            MaterialAlertDialogBuilder(requireContext(), R.style.MaterialAlertDialog_Rounded)
+                .setView(deleteDialogBinding.root)
+                .create()
 
         return binding.root
     }
@@ -64,32 +65,8 @@ class DetailNoteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.detailNoteToolbar.apply {
-            setOnMenuItemClickListener { menuItem ->
-                when (menuItem.itemId) {
-                    R.id.delete_note_menu -> {
-                        showDialog.update { true }
-                        true
-                    }
-                    else -> false
-                }
-            }
-            setNavigationOnClickListener {
-                saveNoteAndNavigateUp()
-            }
-        }
-
-        deleteDialogBinding.apply {
-            deleteNoteConfirmTextView.setOnClickListener {
-                showDialog.update { false }
-                deleteDialog.dismiss()
-                deleteNoteAndNavigateUp()
-            }
-            deleteNoteCancelTextView.setOnClickListener {
-                showDialog.update { false }
-                deleteDialog.dismiss()
-            }
-        }
+        setupDetailNoteToolbar()
+        setupDeleteNoteDialog()
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
@@ -109,6 +86,37 @@ class DetailNoteFragment : Fragment() {
             )
     }
 
+    private fun setupDetailNoteToolbar() {
+        binding.detailNoteToolbar.apply {
+            setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.delete_note_menu -> {
+                        showDialog.update { true }
+                        true
+                    }
+                    else -> false
+                }
+            }
+            setNavigationOnClickListener {
+                saveNoteAndNavigateUp()
+            }
+        }
+    }
+
+    private fun setupDeleteNoteDialog() {
+        deleteDialogBinding.apply {
+            deleteNoteConfirmTextView.setOnClickListener {
+                showDialog.update { false }
+                deleteDialog.dismiss()
+                deleteNoteAndNavigateUp()
+            }
+            deleteNoteCancelTextView.setOnClickListener {
+                showDialog.update { false }
+                deleteDialog.dismiss()
+            }
+        }
+    }
+
     private fun saveNoteAndNavigateUp() {
         viewModel.saveNote()
         findNavController().navigateUp()
@@ -122,6 +130,7 @@ class DetailNoteFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _deleteDialog = null
+        _deleteDialogBinding = null
         _binding = null
     }
 }
