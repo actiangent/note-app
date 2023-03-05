@@ -8,11 +8,17 @@ buildscript {
 
         // App Dependencies
         appCompatVersion = '1.4.2'
+        androidxArchTestVersion = '2.2.0'
+        androidxTestVersion = '1.5.0'
+        appCompatVersion = '1.4.2'
         coroutinesVersion = '1.6.1'
+        espressoVersion = '3.5.1'
         fragmentVersion = "1.6.0-alpha02"
         gradleVersion = '7.3.0'
         hiltVersion = '2.44'
         kotlinVersion = '1.7.10'
+        junitVersion = '4.13.2'
+        junitExtVersion = '1.1.5'
         ktxVersion = '1.9.0'
         lifecycleVersion = '2.5.1'
         materialVersion = '1.7.0'
