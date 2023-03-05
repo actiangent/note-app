@@ -1,5 +1,9 @@
 # Note app
 
+## Screenshots
+![screenshot-1](https://raw.githubusercontent.com/actiangent/note-app/main/screenshots/screenshot-1.png)
+![screenshot-2](https://raw.githubusercontent.com/actiangent/note-app/main/screenshots/screenshot-2.png)
+
 ### Disclaimer
 
 This branch is **not finished** yet, in the meantime go check out [compose](https://github.com/actiangent/note-app/tree/compose)
@@ -48,6 +52,3 @@ git checkout compose
 ```
 
 Finally, open the `note-app` directory in Android Studio.
-
-## Screenshots
-![screenshot](https://raw.githubusercontent.com/actiangent/note-app/main/screenshots/screenshot.png)
