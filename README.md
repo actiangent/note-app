@@ -10,7 +10,7 @@ This branch is **not finished** yet, in the meantime go check out [compose](http
 branch for Jetpack Compose implementation.
 
 ***TODO :***
-* Write tests
+* Adjust app theme color, especially in dark mode
 
 ## Project Overview
 
