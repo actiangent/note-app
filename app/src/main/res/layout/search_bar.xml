@@ -21,10 +21,11 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/menu_icon_image_view"
+                android:id="@+id/drawer_icon_image_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
+                android:contentDescription="@string/drawer_content_description"
                 android:src="@drawable/ic_baseline_menu_24"
                 android:visibility="@{viewModel.uiState.searchQuery.blank ? View.VISIBLE : View.INVISIBLE}"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -40,14 +41,16 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:background="@android:color/transparent"
-                android:hint="Search your notes"
+                android:hint="@string/search_note"
+                android:importantForAutofill="no"
+                android:inputType="text"
                 android:padding="12dp"
                 android:text="@{viewModel.uiState.searchQuery}"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/clear_icon_image_view"
                 app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toEndOf="@id/menu_icon_image_view"
+                app:layout_constraintStart_toEndOf="@id/drawer_icon_image_view"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
@@ -62,7 +65,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_weight="0"
                 app:layout_constraintStart_toEndOf="@id/search_query_edit_text"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/clear_query_content_description" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

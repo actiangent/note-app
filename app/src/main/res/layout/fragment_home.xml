@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.actiangent.note.ui.fragment.home.HomeViewModel" />
@@ -35,7 +37,9 @@
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="24dp"
             android:backgroundTint="?android:colorBackground"
+            android:contentDescription="@string/new_note_content_description"
             android:elevation="2dp"
+            android:labelFor="@id/add_note_fab"
             android:src="@drawable/baseline_add_24"
             android:tint="?android:colorPrimary" />
 
@@ -43,8 +47,22 @@
             android:id="@+id/recycler_view_notes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:nestedScrollingEnabled="false"
             tools:listitem="@layout/item_note" />
+
+        <include
+            android:id="@+id/empty_notes_content"
+            layout="@layout/empty_notes_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible" />
+
+        <include
+            android:id="@+id/empty_searched_notes_content"
+            layout="@layout/empty_searched_notes_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible" />
+
     </FrameLayout>
 
 </layout>

@@ -2,6 +2,7 @@ package com.actiangent.note.ui.fragment.home
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Message
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +22,7 @@ import androidx.transition.Transition
 import androidx.transition.TransitionManager
 import com.actiangent.note.data.model.emptyNote
 import com.actiangent.note.databinding.FragmentHomeBinding
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -73,7 +75,13 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 viewModel.uiState.collect { uiState ->
+                    uiState.snackbarMessage?.let { stringResId ->
+                        showSnackbar(getString(stringResId))
+                        viewModel.snackbarMessageShown()
+                    }
+
                     homeNoteListAdapter.submitList(uiState.notes)
+                    whichContentVisible(uiState)
                 }
             }
         }
@@ -133,6 +141,27 @@ class HomeFragment : Fragment() {
 
     private fun setupAddNoteFab() {
         binding.addNoteFab.setOnClickListener { navigateToDetailNote(emptyNote.id) }
+    }
+
+    private fun showSnackbar(message: String) {
+        Snackbar.make(requireContext(), binding.root, message, Snackbar.LENGTH_LONG)
+            .show()
+    }
+
+    private fun whichContentVisible(uiState: HomeNoteUiState) {
+        if (uiState.notes.isEmpty() and uiState.searchQuery.isNotBlank()) {
+            binding.recyclerViewNotes.visibility = View.INVISIBLE
+            binding.emptyNotesContent.visibility = View.INVISIBLE
+            binding.emptySearchedNotesContent.visibility = View.VISIBLE
+        } else if (uiState.notes.isEmpty()) {
+            binding.recyclerViewNotes.visibility = View.INVISIBLE
+            binding.emptyNotesContent.visibility = View.VISIBLE
+            binding.emptySearchedNotesContent.visibility = View.INVISIBLE
+        } else {
+            binding.recyclerViewNotes.visibility = View.VISIBLE
+            binding.emptyNotesContent.visibility = View.INVISIBLE
+            binding.emptySearchedNotesContent.visibility = View.INVISIBLE
+        }
     }
 
     private fun navigateToDetailNote(noteId: Int) {

@@ -15,11 +15,6 @@ data class HomeNoteUiState(
     val snackbarMessage: Int? = null
 )
 
-data class HomeNoteUiErrorState(
-    val isError: Boolean = false,
-    val message: String = "An error occurred"
-)
-
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     repository: NoteRepository
