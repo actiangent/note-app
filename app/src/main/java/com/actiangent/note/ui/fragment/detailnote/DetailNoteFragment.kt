@@ -70,11 +70,20 @@ class DetailNoteFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                viewModel.uiState.collectLatest { uiState ->
+                    showDeleteMenu(uiState.isNoteSaved)
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 showDialog.collectLatest { showDialog ->
                     if (showDialog) deleteDialog.show()
                 }
             }
         }
+
     }
 
     override fun onAttach(context: Context) {
@@ -101,6 +110,11 @@ class DetailNoteFragment : Fragment() {
                 saveNoteAndNavigateUp()
             }
         }
+    }
+
+    private fun showDeleteMenu(show: Boolean) {
+        binding.detailNoteToolbar.menu.findItem(R.id.delete_note_menu).isVisible =
+            viewModel.uiState.value.isNoteSaved
     }
 
     private fun setupDeleteNoteDialog() {

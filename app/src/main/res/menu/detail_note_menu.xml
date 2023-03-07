@@ -6,7 +6,8 @@
         android:id="@+id/delete_note_menu"
         android:icon="@drawable/baseline_delete_outline_24"
         android:title="@string/delete"
-        app:showAsAction="always"
-        app:iconTint="?android:textColorPrimary" />
+        android:visible="false"
+        app:iconTint="?android:textColorPrimary"
+        app:showAsAction="always" />
 
 </menu>
