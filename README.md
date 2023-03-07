@@ -4,14 +4,6 @@
 ![screenshot-1](https://raw.githubusercontent.com/actiangent/note-app/main/screenshots/screenshot-1.png)
 ![screenshot-2](https://raw.githubusercontent.com/actiangent/note-app/main/screenshots/screenshot-2.png)
 
-### Disclaimer
-
-This branch is **not finished** yet, in the meantime go check out [compose](https://github.com/actiangent/note-app/tree/compose)
-branch for Jetpack Compose implementation.
-
-***TODO :***
-* Adjust app theme color, especially in dark mode
-
 ## Project Overview
 
 A simple note taking app that allows users to create and manage notes. 

@@ -1,17 +1,23 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.NoteApp" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="Theme.NoteApp" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/slightDarkWhite</item>
-        <item name="colorPrimaryVariant">@color/slightLightBlack</item>
-        <item name="colorOnPrimary">@color/slightDarkWhite</item>
+        <item name="colorPrimary">@color/darkGray</item>
+        <item name="colorPrimaryVariant">@color/darkGray</item>
+        <item name="colorOnPrimary">@color/lightGray</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/darkGray</item>
-        <item name="colorSecondaryVariant">@color/darkGray</item>
-        <item name="colorOnSecondary">@color/darkGray</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="colorSecondary">@color/slightLightBlack</item>
+        <item name="colorSecondaryVariant">@color/slightLightBlack</item>
+        <item name="colorOnSecondary">@color/slightDarkWhite</item>
+
+        <item name="colorSurface">@color/darkGray</item>
 
         <item name="android:background">@color/slightLightBlack</item>
+
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/background</item>
+
+        <!-- Edit Text cursor-->
+        <item name="android:textSelectHandle">@drawable/note_edit_text_cursor</item>
     </style>
 </resources>

@@ -2,25 +2,22 @@
     <!-- Base application theme. -->
     <style name="Theme.NoteApp" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/slightLightBlack</item>
+        <item name="colorPrimary">@color/slightDarkWhite</item>
         <item name="colorPrimaryVariant">@color/slightDarkWhite</item>
         <item name="colorOnPrimary">@color/slightLightBlack</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/lightGray</item>
         <item name="colorSecondaryVariant">@color/lightGray</item>
-        <item name="colorOnSecondary">@color/lightGray</item>
+        <item name="colorOnSecondary">@color/slightLightBlack</item>
+
+        <item name="colorSurface">@color/slightDarkWhite</item>
+
+        <item name="android:background">@color/white</item>
+
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">?attr/background</item>
 
-        <item name="android:background">@color/slightDarkWhite</item>
-    </style>
-
-    <style name="MaterialAlertDialog.Rounded" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
-        <item name="shapeAppearanceOverlay">@style/DialogCorners</item>
-    </style>
-
-    <style name="DialogCorners">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">12dp</item>
+        <!-- Edit Text cursor-->
+        <item name="android:textSelectHandle">@drawable/note_edit_text_cursor</item>
     </style>
 </resources>
