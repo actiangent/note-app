@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
@@ -74,12 +75,13 @@ fun DetailNoteContent(
     var showDialog by remember { mutableStateOf(false) }
 
     val textFieldColors = TextFieldDefaults.textFieldColors(
-        backgroundColor = MaterialTheme.colors.background,
-        cursorColor = MaterialTheme.colors.onSurface,
-        focusedIndicatorColor = MaterialTheme.colors.background,
-        unfocusedIndicatorColor = MaterialTheme.colors.background,
-        disabledIndicatorColor = MaterialTheme.colors.background,
-        focusedLabelColor = MaterialTheme.colors.background
+        textColor = MaterialTheme.colors.onPrimary,
+        backgroundColor = Color.Transparent,
+        cursorColor = MaterialTheme.colors.onPrimary,
+        focusedIndicatorColor = Color.Transparent,
+        unfocusedIndicatorColor = Color.Transparent,
+        disabledIndicatorColor = Color.Transparent,
+        focusedLabelColor = Color.Transparent
     )
 
     if (showDialog) {
@@ -114,7 +116,7 @@ fun DetailNoteContent(
                 }
             },
             backgroundColor = MaterialTheme.colors.background,
-            contentColor = MaterialTheme.colors.primary,
+            contentColor = MaterialTheme.colors.onPrimary,
             elevation = 0.dp
         )
         TextField(
@@ -138,6 +140,7 @@ fun DetailNoteContent(
         )
         Text(
             text = dateTime,
+            color = MaterialTheme.colors.onPrimary,
             fontSize = 14.sp,
             style = MaterialTheme.typography.subtitle1.copy(
                 fontWeight = FontWeight.Medium,
@@ -171,9 +174,7 @@ fun DetailNoteContent(
 fun DetailNoteScreenPreview() {
     NotesAppTheme {
         Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colors.background,
-            contentColor = MaterialTheme.colors.primary
+            modifier = Modifier.fillMaxSize()
         ) {
             DetailNoteContent(
                 title = "Note title",

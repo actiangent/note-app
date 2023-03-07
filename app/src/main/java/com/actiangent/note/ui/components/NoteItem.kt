@@ -19,20 +19,16 @@ import androidx.compose.ui.unit.sp
 import com.actiangent.note.data.model.Note
 import com.actiangent.note.ui.theme.NotesAppTheme
 
-@Composable
 fun NoteItem(
+    @Composable
     note: Note,
     onClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val cardColor = MaterialTheme.colors.background
-    val cardContentColor = MaterialTheme.colors.primary
     val outline = MaterialTheme.colors.secondary
 
     Card(
         shape = RoundedCornerShape(12.dp),
-        backgroundColor = cardColor,
-        contentColor = cardContentColor,
         border = BorderStroke(1.dp, outline),
         elevation = 0.dp,
         modifier = modifier

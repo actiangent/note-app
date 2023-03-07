@@ -25,8 +25,6 @@ fun DeleteNoteConfirmationDialog(
 ) {
     Dialog(onDismissRequest = onDismiss) {
         Card(
-            backgroundColor = MaterialTheme.colors.background,
-            contentColor = MaterialTheme.colors.primary,
             elevation = 8.dp,
             shape = RoundedCornerShape(12.dp),
             modifier = modifier
@@ -42,12 +40,19 @@ fun DeleteNoteConfirmationDialog(
                     text = stringResource(id = R.string.confirm_deletion_text),
                     style = MaterialTheme.typography.body2
                 )
+                Spacer(modifier = Modifier.padding(8.dp))
                 Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                     TextButton(onClick = onDismiss) {
-                        Text(text = stringResource(id = R.string.cancel))
+                        Text(
+                            text = stringResource(id = R.string.cancel),
+                            color = MaterialTheme.colors.onPrimary
+                        )
                     }
                     TextButton(onClick = onConfirm) {
-                        Text(text = stringResource(id = R.string.delete))
+                        Text(
+                            text = stringResource(id = R.string.delete),
+                            color = MaterialTheme.colors.onPrimary
+                        )
                     }
                 }
             }

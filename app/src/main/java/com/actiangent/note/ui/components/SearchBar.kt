@@ -53,7 +53,7 @@ fun SearchBar(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_baseline_menu_24),
                     contentDescription = stringResource(id = R.string.drawer_content_description),
-                    tint = MaterialTheme.colors.primary
+                    tint = MaterialTheme.colors.onPrimary
                 )
             }
         } else {
@@ -65,12 +65,11 @@ fun SearchBar(
             placeHolderString = stringResource(id = R.string.search_note),
             onValueChange = onQueryChange,
             contentTextStyle = TextStyle(
-                color = MaterialTheme.colors.primary,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal
             ),
             hintTextStyle = TextStyle(
-                color = MaterialTheme.colors.primary,
+                color = MaterialTheme.colors.onPrimary,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Thin
             ),
@@ -88,7 +87,7 @@ fun SearchBar(
                 Icon(
                     imageVector = Icons.Outlined.Clear,
                     contentDescription = stringResource(id = R.string.clear_query_content_description),
-                    tint = MaterialTheme.colors.primary
+                    tint = MaterialTheme.colors.onPrimary
                 )
             }
         }
@@ -151,7 +150,9 @@ fun InputEditText(
 @Preview(showBackground = true)
 @Composable
 fun SearchBarPreview() {
-    NotesAppTheme {
+    NotesAppTheme(
+        darkTheme = true
+    ) {
         SearchBar(
             query = "",
             onQueryChange = {},

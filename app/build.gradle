@@ -92,10 +92,13 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$composeUiVersion"
 
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion" //TestDispatcher
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+    //TestDispatcher
 
-    androidTestImplementation "androidx.arch.core:core-testing:$androidxArchTestVersion" // InstantTaskExecutorRule
-    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion" //TestDispatcher
+    androidTestImplementation "androidx.arch.core:core-testing:$androidxArchTestVersion"
+    // InstantTaskExecutorRule
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+    //TestDispatcher
 
     debugImplementation "androidx.compose.ui:ui-tooling:$composeUiVersion"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$composeUiVersion"

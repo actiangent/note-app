@@ -55,8 +55,7 @@ fun HomeScreen(
             Button(
                 onClick = { navigateToDetailNote(emptyNote.id) },
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.secondary,
-                    contentColor = MaterialTheme.colors.primary
+                    backgroundColor = MaterialTheme.colors.secondary
                 ),
                 shape = RoundedCornerShape(12.dp),
                 contentPadding = PaddingValues(top = 12.dp, bottom = 12.dp),
