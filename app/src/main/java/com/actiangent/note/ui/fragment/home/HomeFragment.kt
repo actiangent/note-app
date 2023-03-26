@@ -2,7 +2,6 @@ package com.actiangent.note.ui.fragment.home
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.os.Message
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View

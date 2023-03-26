@@ -114,19 +114,22 @@ class DetailNoteFragment : Fragment() {
 
     private fun showDeleteMenu(show: Boolean) {
         binding.detailNoteToolbar.menu.findItem(R.id.delete_note_menu).isVisible =
-            viewModel.uiState.value.isNoteSaved
+            show
+    }
+
+    private fun dismissDeleteDialog() {
+        showDialog.update { false }
+        deleteDialog.dismiss()
     }
 
     private fun setupDeleteNoteDialog() {
         deleteDialogBinding.apply {
             deleteNoteConfirmTextView.setOnClickListener {
-                showDialog.update { false }
-                deleteDialog.dismiss()
+                dismissDeleteDialog()
                 deleteNoteAndNavigateUp()
             }
             deleteNoteCancelTextView.setOnClickListener {
-                showDialog.update { false }
-                deleteDialog.dismiss()
+                dismissDeleteDialog()
             }
         }
     }

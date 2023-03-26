@@ -8,7 +8,7 @@
         android:bottomRightRadius="8dp"
         android:topLeftRadius="8dp"
         android:topRightRadius="8dp" />
-    <solid android:color="?android:background"/>
+    <solid android:color="?android:background" />
     <size
         android:width="0dp"
         android:height="0dp" />
